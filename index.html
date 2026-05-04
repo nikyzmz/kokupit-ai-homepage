@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>KOKUPIT AI Homepage Mockup</title>
+  <title>KOKUPIT AI</title>
   <style>
     :root {
       --bg: #080d10;
@@ -102,6 +102,8 @@
       font-size: 16px;
       font-weight: 900;
       letter-spacing: 0;
+      color: var(--text);
+      text-decoration: none;
     }
 
     .mark {
@@ -125,16 +127,26 @@
       font-weight: 800;
     }
 
+    .nav a {
+      color: inherit;
+      text-decoration: none;
+    }
+
     .nav button,
+    .nav .nav-cta,
     .primary,
     .secondary,
     .mini-button {
       font-family: inherit;
       cursor: default;
+      text-decoration: none;
     }
 
-    .nav button {
+    .nav button,
+    .nav .nav-cta {
       height: 38px;
+      display: inline-flex;
+      align-items: center;
       padding: 0 18px;
       border: 1px solid rgba(255, 210, 72, 0.5);
       color: #0d1009;
@@ -220,6 +232,9 @@
     .primary,
     .secondary {
       height: 52px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       padding: 0 20px;
       font-size: 15px;
       font-weight: 900;
@@ -1122,17 +1137,17 @@
 <body>
   <div class="page">
     <header class="topbar">
-      <div class="brand">
+      <a class="brand" href="./" aria-label="KOKUPIT AI ホーム">
         <div class="mark">K</div>
         <div>KOKUPIT AI</div>
-      </div>
+      </a>
       <nav class="nav" aria-label="Main navigation">
-        <span>AIロードアウト</span>
-        <span>オンライン体験</span>
-        <span>用途</span>
-        <span>セキュリティ</span>
-        <span>料金</span>
-        <button>オンラインで無料体験</button>
+        <a href="loadout.html">AIロードアウト</a>
+        <a href="#trial">オンライン体験</a>
+        <a href="#use-cases">用途</a>
+        <a href="#deploy">セキュリティ</a>
+        <a href="#deploy">料金</a>
+        <a class="nav-cta" href="#trial">オンラインで無料体験</a>
       </nav>
     </header>
 
@@ -1149,8 +1164,8 @@
             AIは確認・整理・下書きまで。最後の判断は人が行います。
           </p>
           <div class="actions">
-            <button class="primary">オンラインでAIビルドを体験</button>
-            <button class="secondary">ロードアウトを見る</button>
+            <a class="primary" href="#trial">オンラインでAIビルドを体験</a>
+            <a class="secondary" href="loadout.html">ロードアウトを見る</a>
           </div>
           <div class="trust-row">
             <div class="trust-item">
@@ -1168,7 +1183,7 @@
           </div>
         </div>
 
-        <div class="visual" aria-label="KOKUPIT AI online trial preview">
+        <div class="visual" id="trial" aria-label="KOKUPIT AI online trial preview">
           <div class="visual-head">
             <div class="visual-title"><span class="status"></span>KOKUPIT AI オンライン体験</div>
             <div class="mode-tabs">
@@ -1334,7 +1349,7 @@
         </div>
       </section>
 
-      <section class="section">
+      <section class="section" id="why">
         <div class="section-head">
           <h2>AIに任せるのは、<br>面倒な下準備。</h2>
           <p>
@@ -1364,7 +1379,7 @@
         </div>
       </section>
 
-      <section class="section">
+      <section class="section" id="use-cases">
         <div class="section-head">
           <h2>用途を選んで、<br>すぐ装備。</h2>
           <p>
@@ -1395,7 +1410,7 @@
         </div>
       </section>
 
-      <section class="section">
+      <section class="section" id="deploy">
         <div class="section-head">
           <h2>まず試す。<br>必要なら育てる。</h2>
           <p>
@@ -1426,7 +1441,7 @@
           <strong>あなた専用のAIビルドを、まずはオンラインで。</strong>
           <span>用途を選び、チップを装備し、出力の違いをその場で試せます。</span>
         </div>
-        <button class="primary">オンラインで無料体験</button>
+        <a class="primary" href="#trial">オンラインで無料体験</a>
       </section>
     </main>
   </div>

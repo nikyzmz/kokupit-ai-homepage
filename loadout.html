@@ -1,0 +1,1693 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>KOKUPIT AI Loadout Editor</title>
+  <style>
+    :root {
+      --bg: #080d10;
+      --bg-2: #101716;
+      --panel: rgba(13, 22, 23, 0.84);
+      --panel-2: rgba(18, 29, 28, 0.72);
+      --line: rgba(139, 255, 222, 0.2);
+      --line-hot: rgba(255, 210, 72, 0.5);
+      --text: #effff8;
+      --muted: rgba(239, 255, 248, 0.62);
+      --dim: rgba(239, 255, 248, 0.38);
+      --cyan: #6fffe2;
+      --green: #4ee485;
+      --yellow: #ffd248;
+      --red: #ff5e4d;
+      --pink: #f268ff;
+      --blue: #5ba8ff;
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.42);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 20% 16%, rgba(111, 255, 226, 0.16), transparent 26%),
+        radial-gradient(circle at 84% 12%, rgba(255, 210, 72, 0.13), transparent 25%),
+        radial-gradient(circle at 76% 76%, rgba(242, 104, 255, 0.12), transparent 24%),
+        linear-gradient(135deg, #070b0e 0%, #111613 46%, #090d11 100%);
+      font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", "Noto Sans JP", "Segoe UI", sans-serif;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.28;
+      background-image:
+        linear-gradient(rgba(111, 255, 226, 0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(111, 255, 226, 0.04) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: radial-gradient(circle at 62% 44%, black, transparent 78%);
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.16;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent 0,
+        transparent 7px,
+        rgba(255, 255, 255, 0.05) 8px
+      );
+      mix-blend-mode: screen;
+    }
+
+    .page {
+      min-height: 100vh;
+      padding: 28px 40px 32px;
+      position: relative;
+    }
+
+    .topbar {
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 0 16px 0 18px;
+      border: 1px solid rgba(111, 255, 226, 0.18);
+      background: rgba(6, 13, 15, 0.74);
+      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.25), inset 0 0 0 1px rgba(255, 255, 255, 0.035);
+      backdrop-filter: blur(18px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 16px;
+      font-weight: 850;
+      letter-spacing: 0;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .mark {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(111, 255, 226, 0.44);
+      color: #061110;
+      background: linear-gradient(135deg, var(--cyan), var(--yellow));
+      box-shadow: 0 0 28px rgba(111, 255, 226, 0.22);
+      font-weight: 950;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 760;
+    }
+
+    .nav a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .cta {
+      height: 38px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 18px;
+      border: 1px solid rgba(255, 210, 72, 0.5);
+      color: #0d1009;
+      background: var(--yellow);
+      font-size: 13px;
+      font-weight: 900;
+      text-decoration: none;
+      box-shadow: 0 0 30px rgba(255, 210, 72, 0.22);
+    }
+
+    .hero {
+      max-width: 1360px;
+      margin: 0 auto;
+      min-height: calc(100vh - 96px);
+      display: grid;
+      grid-template-columns: minmax(450px, 0.82fr) minmax(770px, 1.18fr);
+      gap: 24px;
+      align-items: center;
+      padding-top: 26px;
+    }
+
+    .copy {
+      align-self: stretch;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-bottom: 12px;
+    }
+
+    .kicker {
+      display: inline-flex;
+      width: fit-content;
+      align-items: center;
+      gap: 10px;
+      height: 34px;
+      padding: 0 12px;
+      border: 1px solid rgba(111, 255, 226, 0.26);
+      color: var(--cyan);
+      background: rgba(111, 255, 226, 0.07);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .pulse {
+      width: 9px;
+      height: 9px;
+      background: var(--green);
+      box-shadow: 0 0 0 5px rgba(78, 228, 133, 0.12), 0 0 18px rgba(78, 228, 133, 0.7);
+    }
+
+    h1 {
+      margin: 24px 0 0;
+      max-width: none;
+      font-size: clamp(30px, 3.6vw, 48px);
+      line-height: 1.06;
+      letter-spacing: 0;
+      font-weight: 950;
+    }
+
+    .headline-line {
+      display: block;
+    }
+
+    h1 .highlight {
+      color: var(--yellow);
+      text-shadow: 0 0 28px rgba(255, 210, 72, 0.18);
+      white-space: nowrap;
+    }
+
+    .nowrap {
+      white-space: nowrap;
+    }
+
+    .lead {
+      margin: 24px 0 0;
+      max-width: 540px;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.78;
+      font-weight: 560;
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 32px;
+    }
+
+    .primary,
+    .secondary {
+      height: 52px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 20px;
+      font-size: 15px;
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    .primary {
+      border: 1px solid rgba(255, 210, 72, 0.65);
+      color: #08100e;
+      background: var(--yellow);
+      box-shadow: 0 0 36px rgba(255, 210, 72, 0.22);
+    }
+
+    .secondary {
+      border: 1px solid rgba(111, 255, 226, 0.22);
+      color: var(--text);
+      background: rgba(111, 255, 226, 0.07);
+    }
+
+    .loadout-summary {
+      display: none;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      max-width: 500px;
+      margin-top: 32px;
+    }
+
+    .summary-item {
+      min-height: 76px;
+      padding: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .summary-item strong {
+      display: block;
+      color: var(--text);
+      font-size: 13px;
+      letter-spacing: 0;
+    }
+
+    .summary-item span {
+      display: block;
+      margin-top: 7px;
+      color: var(--dim);
+      font-size: 12px;
+      line-height: 1.45;
+      font-weight: 680;
+    }
+
+    .deck-wrap {
+      position: relative;
+      min-height: 794px;
+    }
+
+    .deck {
+      position: relative;
+      min-height: 748px;
+      border: 1px solid rgba(111, 255, 226, 0.2);
+      background:
+        linear-gradient(135deg, rgba(9, 18, 20, 0.9), rgba(19, 26, 22, 0.86)),
+        radial-gradient(circle at 48% 38%, rgba(111, 255, 226, 0.13), transparent 32%);
+      box-shadow: var(--shadow), inset 0 0 0 1px rgba(255, 255, 255, 0.035);
+      backdrop-filter: blur(22px);
+      overflow: hidden;
+    }
+
+    .deck::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: 0.52;
+      background:
+        linear-gradient(120deg, transparent 0 18%, rgba(111, 255, 226, 0.08) 18.4%, transparent 19% 61%, rgba(255, 210, 72, 0.08) 61.5%, transparent 62%),
+        linear-gradient(rgba(255, 255, 255, 0.032) 1px, transparent 1px);
+      background-size: auto, 100% 24px;
+      pointer-events: none;
+    }
+
+    .deck-head {
+      position: relative;
+      z-index: 2;
+      height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      border-bottom: 1px solid rgba(111, 255, 226, 0.16);
+      background: rgba(6, 12, 13, 0.58);
+    }
+
+    .deck-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+      font-weight: 920;
+      color: var(--text);
+    }
+
+    .deck-title .status {
+      width: 10px;
+      height: 10px;
+      background: var(--green);
+      box-shadow: 0 0 18px rgba(78, 228, 133, 0.8);
+    }
+
+    .deck-mode {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .mode-pill {
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 10px;
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      color: var(--dim);
+      background: rgba(255, 255, 255, 0.04);
+      font-size: 11px;
+      font-weight: 850;
+    }
+
+    .mode-pill.active {
+      color: #08100e;
+      border-color: rgba(255, 210, 72, 0.6);
+      background: var(--yellow);
+    }
+
+    .deck-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 196px minmax(310px, 1fr) 220px;
+      gap: 12px;
+      padding: 12px;
+    }
+
+    .panel {
+      min-height: 654px;
+      border: 1px solid rgba(111, 255, 226, 0.15);
+      background: rgba(7, 14, 15, 0.72);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.025);
+    }
+
+    .panel-head {
+      height: 46px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+      border-bottom: 1px solid rgba(111, 255, 226, 0.13);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .chip-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      padding: 10px;
+    }
+
+    .chip {
+      position: relative;
+      min-height: 69px;
+      padding: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+      overflow: visible;
+      cursor: pointer;
+      outline: 0;
+    }
+
+    .chip.active {
+      border-color: rgba(111, 255, 226, 0.52);
+      background:
+        linear-gradient(135deg, rgba(111, 255, 226, 0.16), rgba(255, 255, 255, 0.03));
+      box-shadow: 0 0 24px rgba(111, 255, 226, 0.11);
+    }
+
+    .chip.locked {
+      border-color: rgba(255, 210, 72, 0.2);
+      background:
+        repeating-linear-gradient(135deg, rgba(255, 210, 72, 0.1) 0 5px, transparent 5px 12px),
+        rgba(255, 255, 255, 0.025);
+      opacity: 0.82;
+    }
+
+    .chip.locked .chip-name {
+      color: rgba(239, 255, 248, 0.72);
+    }
+
+    .chip::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--cyan);
+      opacity: 0.8;
+    }
+
+    .chip[data-type="DATA"]::before {
+      background: var(--yellow);
+    }
+
+    .chip[data-type="VOICE"]::before {
+      background: var(--pink);
+    }
+
+    .chip[data-type="ACTION"]::before {
+      background: var(--green);
+    }
+
+    .chip[data-type="GUARD"]::before {
+      background: var(--red);
+    }
+
+    .chip[data-type="FORMAT"]::before {
+      background: var(--blue);
+    }
+
+    .chip-top {
+      display: grid;
+      gap: 6px;
+      color: var(--text);
+      font-size: 11px;
+      font-weight: 920;
+    }
+
+    .chip-type {
+      width: fit-content;
+      height: 16px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 6px;
+      border: 1px solid rgba(111, 255, 226, 0.22);
+      color: var(--cyan);
+      background: rgba(111, 255, 226, 0.06);
+      font-size: 8px;
+      font-weight: 900;
+      letter-spacing: 0;
+    }
+
+    .chip-name {
+      display: block;
+      min-height: 26px;
+      line-height: 1.25;
+    }
+
+    .chip-lock {
+      position: absolute;
+      right: 7px;
+      top: 7px;
+      color: var(--yellow);
+      font-size: 10px;
+      font-weight: 950;
+    }
+
+    .chip-rarity {
+      position: absolute;
+      right: 7px;
+      bottom: 7px;
+      display: flex;
+      gap: 3px;
+    }
+
+    .chip-rarity span {
+      width: 5px;
+      height: 5px;
+      background: rgba(255, 255, 255, 0.16);
+    }
+
+    .chip-rarity span.active {
+      background: var(--yellow);
+      box-shadow: 0 0 9px rgba(255, 210, 72, 0.44);
+    }
+
+    .chip::after {
+      content: attr(data-desc);
+      position: absolute;
+      left: calc(100% + 10px);
+      top: 50%;
+      z-index: 20;
+      width: 238px;
+      padding: 10px 11px;
+      border: 1px solid rgba(255, 210, 72, 0.42);
+      color: var(--text);
+      background: rgba(4, 10, 12, 0.96);
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.36), 0 0 24px rgba(255, 210, 72, 0.08);
+      font-size: 11px;
+      line-height: 1.52;
+      font-weight: 720;
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-8px, -50%);
+      transition: opacity 140ms ease, transform 140ms ease;
+    }
+
+    .chip:hover::after,
+    .chip:focus-visible::after,
+    .chip.tooltip-open::after {
+      opacity: 1;
+      transform: translate(0, -50%);
+    }
+
+    .chip:hover,
+    .chip:focus-visible,
+    .chip.tooltip-open {
+      z-index: 8;
+    }
+
+    .stage {
+      min-height: 654px;
+      position: relative;
+      border: 1px solid rgba(111, 255, 226, 0.15);
+      background:
+        radial-gradient(circle at 50% 40%, rgba(111, 255, 226, 0.15), transparent 33%),
+        radial-gradient(circle at 44% 58%, rgba(255, 210, 72, 0.08), transparent 31%),
+        rgba(8, 14, 15, 0.7);
+      overflow: hidden;
+    }
+
+    .stage::before {
+      content: "";
+      position: absolute;
+      inset: 42px;
+      border: 1px solid rgba(111, 255, 226, 0.12);
+      transform: skew(-6deg);
+      pointer-events: none;
+    }
+
+    .build-bar {
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      top: 15px;
+      height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 14px;
+      border: 1px solid rgba(111, 255, 226, 0.15);
+      background: rgba(7, 14, 15, 0.7);
+    }
+
+    .build-small {
+      color: var(--dim);
+      font-size: 10px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .build-name {
+      margin-top: 4px;
+      font-size: 20px;
+      font-weight: 950;
+      letter-spacing: 0;
+    }
+
+    .build-save {
+      height: 32px;
+      padding: 0 12px;
+      border: 1px solid rgba(255, 210, 72, 0.52);
+      color: var(--yellow);
+      background: rgba(255, 210, 72, 0.08);
+      font-size: 11px;
+      font-weight: 900;
+    }
+
+    .core {
+      position: absolute;
+      left: 50%;
+      top: 46%;
+      width: 190px;
+      height: 190px;
+      transform: translate(-50%, -50%);
+      border: 1px solid rgba(111, 255, 226, 0.48);
+      background:
+        linear-gradient(135deg, rgba(111, 255, 226, 0.18), rgba(255, 210, 72, 0.1)),
+        rgba(6, 14, 15, 0.92);
+      box-shadow:
+        0 0 70px rgba(111, 255, 226, 0.22),
+        inset 0 0 38px rgba(111, 255, 226, 0.1);
+      clip-path: polygon(14% 0, 86% 0, 100% 14%, 100% 86%, 86% 100%, 14% 100%, 0 86%, 0 14%);
+    }
+
+    .core::before {
+      content: "";
+      position: absolute;
+      inset: 24px;
+      border: 1px solid rgba(255, 210, 72, 0.35);
+      clip-path: inherit;
+    }
+
+    .core-face {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      color: var(--text);
+      font-size: 17px;
+      font-weight: 950;
+      text-align: center;
+      line-height: 1.25;
+      text-shadow: 0 0 20px rgba(111, 255, 226, 0.45);
+    }
+
+    .ring {
+      position: absolute;
+      left: 50%;
+      top: 46%;
+      width: 372px;
+      height: 372px;
+      transform: translate(-50%, -50%);
+      border: 1px dashed rgba(111, 255, 226, 0.22);
+      border-radius: 50%;
+    }
+
+    .ring.two {
+      width: 490px;
+      height: 300px;
+      transform: translate(-50%, -50%) rotate(-9deg);
+      border-color: rgba(255, 210, 72, 0.18);
+    }
+
+    .slot {
+      position: absolute;
+      width: 146px;
+      min-height: 72px;
+      padding: 10px;
+      border: 1px solid rgba(111, 255, 226, 0.24);
+      background: rgba(7, 14, 15, 0.78);
+      box-shadow: 0 0 24px rgba(0, 0, 0, 0.18);
+    }
+
+    .slot.empty {
+      border-style: dashed;
+      color: var(--dim);
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    .slot.logic {
+      left: 20px;
+      top: 104px;
+    }
+
+    .slot.lens {
+      right: 20px;
+      top: 102px;
+    }
+
+    .slot.knowledge {
+      left: 22px;
+      top: 282px;
+    }
+
+    .slot.action {
+      right: 22px;
+      top: 280px;
+    }
+
+    .slot.voice {
+      left: 92px;
+      bottom: 92px;
+    }
+
+    .slot.security {
+      right: 92px;
+      bottom: 92px;
+    }
+
+    .slot-label {
+      color: var(--cyan);
+      font-size: 10px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .slot-name {
+      margin-top: 6px;
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 900;
+      line-height: 1.25;
+    }
+
+    .slot-bonus {
+      margin-top: 7px;
+      color: var(--yellow);
+      font-size: 11px;
+      font-weight: 850;
+    }
+
+    .connector {
+      position: absolute;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(111, 255, 226, 0.58), transparent);
+      transform-origin: left center;
+      pointer-events: none;
+    }
+
+    .connector.a {
+      left: 184px;
+      top: 182px;
+      width: 200px;
+      transform: rotate(16deg);
+    }
+
+    .connector.b {
+      right: 190px;
+      top: 182px;
+      width: 190px;
+      transform: rotate(164deg);
+    }
+
+    .connector.c {
+      left: 190px;
+      top: 356px;
+      width: 184px;
+      transform: rotate(-11deg);
+    }
+
+    .connector.d {
+      right: 188px;
+      top: 358px;
+      width: 184px;
+      transform: rotate(190deg);
+    }
+
+    .dragging-chip {
+      position: absolute;
+      left: 54px;
+      top: 454px;
+      width: 168px;
+      min-height: 76px;
+      padding: 11px;
+      border: 1px solid rgba(255, 210, 72, 0.6);
+      background:
+        linear-gradient(135deg, rgba(255, 210, 72, 0.2), rgba(7, 14, 15, 0.9));
+      box-shadow: 0 0 40px rgba(255, 210, 72, 0.16);
+      transform: rotate(-5deg);
+    }
+
+    .drag-path {
+      position: absolute;
+      left: 206px;
+      top: 488px;
+      width: 132px;
+      height: 78px;
+      border-top: 2px dashed rgba(255, 210, 72, 0.45);
+      border-right: 2px dashed rgba(255, 210, 72, 0.45);
+      transform: skew(-10deg);
+      pointer-events: none;
+    }
+
+    .output-strip {
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      bottom: 15px;
+      height: 72px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+    }
+
+    .output {
+      padding: 11px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(0, 0, 0, 0.22);
+    }
+
+    .output strong {
+      display: block;
+      color: var(--cyan);
+      font-size: 10px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .output span {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.45;
+      font-weight: 720;
+    }
+
+    .equipment-field {
+      position: absolute;
+      inset: 82px 12px 14px;
+      border: 1px solid rgba(111, 255, 226, 0.13);
+      background:
+        radial-gradient(circle at 50% 43%, rgba(111, 255, 226, 0.12), transparent 32%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 52%);
+      overflow: hidden;
+    }
+
+    .equipment-field::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 48%;
+      width: 162px;
+      height: 410px;
+      transform: translate(-50%, -50%);
+      border: 1px dashed rgba(255, 210, 72, 0.22);
+      clip-path: polygon(50% 0, 100% 16%, 100% 84%, 50% 100%, 0 84%, 0 16%);
+    }
+
+    .avatar-figure {
+      position: absolute;
+      left: 50%;
+      top: 51%;
+      width: 156px;
+      height: 418px;
+      transform: translate(-50%, -50%);
+      filter: drop-shadow(0 0 32px rgba(111, 255, 226, 0.18));
+    }
+
+    .avatar-head,
+    .avatar-torso,
+    .avatar-arm,
+    .avatar-leg {
+      position: absolute;
+      border: 1px solid rgba(111, 255, 226, 0.42);
+      background:
+        linear-gradient(135deg, rgba(111, 255, 226, 0.16), rgba(255, 210, 72, 0.08)),
+        rgba(8, 18, 19, 0.94);
+      box-shadow: inset 0 0 24px rgba(111, 255, 226, 0.07);
+    }
+
+    .avatar-head {
+      left: 49px;
+      top: 18px;
+      width: 58px;
+      height: 62px;
+      clip-path: polygon(26% 0, 74% 0, 100% 28%, 88% 86%, 50% 100%, 12% 86%, 0 28%);
+    }
+
+    .avatar-torso {
+      left: 24px;
+      top: 98px;
+      width: 108px;
+      height: 168px;
+      clip-path: polygon(16% 0, 84% 0, 100% 26%, 82% 100%, 18% 100%, 0 26%);
+    }
+
+    .avatar-arm {
+      top: 116px;
+      width: 36px;
+      height: 146px;
+      clip-path: polygon(36% 0, 100% 12%, 72% 100%, 0 88%);
+    }
+
+    .avatar-arm.left {
+      left: 2px;
+      transform: rotate(7deg);
+    }
+
+    .avatar-arm.right {
+      right: 2px;
+      transform: scaleX(-1) rotate(7deg);
+    }
+
+    .avatar-leg {
+      top: 276px;
+      width: 42px;
+      height: 124px;
+      clip-path: polygon(8% 0, 92% 0, 76% 100%, 20% 100%);
+    }
+
+    .avatar-leg.left {
+      left: 42px;
+    }
+
+    .avatar-leg.right {
+      right: 42px;
+    }
+
+    .avatar-core {
+      position: absolute;
+      left: 50%;
+      top: 184px;
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      transform: translateX(-50%);
+      border: 1px solid rgba(255, 210, 72, 0.54);
+      color: var(--yellow);
+      background: rgba(255, 210, 72, 0.08);
+      font-size: 10px;
+      font-weight: 950;
+    }
+
+    .equip-slot {
+      position: absolute;
+      z-index: 2;
+      width: 96px;
+      min-height: 52px;
+      padding: 7px;
+      border: 1px solid rgba(111, 255, 226, 0.28);
+      background: rgba(7, 14, 15, 0.84);
+      box-shadow: 0 0 24px rgba(0, 0, 0, 0.18);
+    }
+
+    .equip-slot .slot-label {
+      color: var(--cyan);
+      font-size: 8px;
+      font-weight: 950;
+    }
+
+    .equip-slot .slot-name {
+      margin-top: 5px;
+      min-height: 18px;
+      color: var(--text);
+      font-size: 11px;
+      line-height: 1.22;
+      font-weight: 900;
+    }
+
+    .equip-slot .slot-bonus {
+      margin-top: 5px;
+      color: var(--yellow);
+      font-size: 9px;
+      font-weight: 850;
+    }
+
+    .equip-slot.empty {
+      border-style: dashed;
+      color: var(--dim);
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    .equip-slot.empty .slot-name {
+      color: var(--dim);
+    }
+
+    .equip-slot.locked {
+      border-color: rgba(255, 210, 72, 0.32);
+      color: rgba(255, 210, 72, 0.76);
+      background:
+        repeating-linear-gradient(135deg, rgba(255, 210, 72, 0.12) 0 6px, transparent 6px 14px),
+        rgba(7, 14, 15, 0.88);
+    }
+
+    .equip-slot.locked::after {
+      content: "鍵";
+      position: absolute;
+      right: 7px;
+      top: 7px;
+      color: var(--yellow);
+      font-size: 11px;
+      font-weight: 950;
+    }
+
+    .equip-slot.logic {
+      left: 18px;
+      top: 16px;
+    }
+
+    .equip-slot.lens {
+      right: 18px;
+      top: 16px;
+    }
+
+    .equip-slot.knowledge {
+      left: 18px;
+      top: 82px;
+    }
+
+    .equip-slot.action {
+      right: 18px;
+      top: 82px;
+    }
+
+    .equip-slot.voice {
+      left: 18px;
+      top: 148px;
+    }
+
+    .equip-slot.guard {
+      right: 18px;
+      top: 148px;
+    }
+
+    .equip-slot.memory {
+      left: 18px;
+      bottom: 88px;
+    }
+
+    .equip-slot.tool {
+      right: 18px;
+      bottom: 88px;
+    }
+
+    .equip-slot.pro-a {
+      left: 18px;
+      bottom: 26px;
+    }
+
+    .equip-slot.pro-b {
+      right: 18px;
+      bottom: 26px;
+    }
+
+    .avatar-caption {
+      position: absolute;
+      left: 50%;
+      bottom: 18px;
+      width: 132px;
+      transform: translateX(-50%);
+      color: var(--dim);
+      text-align: center;
+      font-size: 10px;
+      line-height: 1.45;
+      font-weight: 820;
+    }
+
+    .slot-line {
+      position: absolute;
+      z-index: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(111, 255, 226, 0.45), transparent);
+      pointer-events: none;
+    }
+
+    .slot-line.a { left: 120px; top: 72px; width: 88px; transform: rotate(8deg); }
+    .slot-line.b { right: 120px; top: 72px; width: 88px; transform: rotate(172deg); }
+    .slot-line.c { left: 120px; top: 162px; width: 86px; transform: rotate(-8deg); }
+    .slot-line.d { right: 120px; top: 162px; width: 86px; transform: rotate(188deg); }
+
+    .stats {
+      padding: 11px;
+    }
+
+    .profile {
+      padding: 12px;
+      border: 1px solid rgba(255, 210, 72, 0.24);
+      background: rgba(255, 210, 72, 0.08);
+    }
+
+    .profile-label {
+      color: var(--yellow);
+      font-size: 10px;
+      font-weight: 950;
+      text-transform: uppercase;
+    }
+
+    .profile-name {
+      margin-top: 6px;
+      font-size: 18px;
+      line-height: 1.25;
+      font-weight: 950;
+    }
+
+    .hex-stats {
+      margin-top: 14px;
+      padding: 8px 0 0;
+    }
+
+    .radar {
+      width: 100%;
+      height: auto;
+      overflow: visible;
+    }
+
+    .radar-grid {
+      fill: none;
+      stroke: rgba(111, 255, 226, 0.14);
+      stroke-width: 1;
+    }
+
+    .radar-axis {
+      stroke: rgba(111, 255, 226, 0.16);
+      stroke-width: 1;
+    }
+
+    .radar-shape {
+      fill: rgba(111, 255, 226, 0.22);
+      stroke: var(--yellow);
+      stroke-width: 2;
+      filter: drop-shadow(0 0 10px rgba(255, 210, 72, 0.28));
+    }
+
+    .radar-label {
+      fill: rgba(239, 255, 248, 0.72);
+      font-size: 10px;
+      font-weight: 900;
+    }
+
+    .radar-value {
+      fill: var(--yellow);
+      font-size: 9px;
+      font-weight: 950;
+    }
+
+    .hex-legend {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 7px;
+      margin-top: 8px;
+    }
+
+    .hex-legend div {
+      min-height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 7px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.035);
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 850;
+    }
+
+    .hex-legend strong {
+      color: var(--yellow);
+      font-size: 10px;
+    }
+
+    .stat-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 15px;
+    }
+
+    .stat-row {
+      display: grid;
+      gap: 6px;
+    }
+
+    .stat-label {
+      display: flex;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 860;
+    }
+
+    .bar {
+      height: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+    }
+
+    .fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--cyan), var(--yellow));
+      box-shadow: 0 0 20px rgba(111, 255, 226, 0.22);
+    }
+
+    .mods {
+      margin-top: 17px;
+    }
+
+    .mods-title {
+      color: var(--dim);
+      font-size: 10px;
+      font-weight: 950;
+      text-transform: uppercase;
+    }
+
+    .mod-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 9px;
+    }
+
+    .mod {
+      min-height: 62px;
+      padding: 9px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.035);
+      font-size: 11px;
+      line-height: 1.3;
+      font-weight: 850;
+      color: var(--text);
+    }
+
+    .mod span {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--dim);
+      font-size: 9px;
+      font-weight: 950;
+      text-transform: uppercase;
+    }
+
+    .trial-card {
+      display: none;
+      position: absolute;
+      right: 22px;
+      bottom: 0;
+      width: 314px;
+      min-height: 124px;
+      padding: 16px;
+      border: 1px solid rgba(255, 210, 72, 0.34);
+      background: rgba(8, 14, 15, 0.88);
+      box-shadow: 0 0 54px rgba(0, 0, 0, 0.32), 0 0 32px rgba(255, 210, 72, 0.09);
+      backdrop-filter: blur(16px);
+    }
+
+    .trial-card .label {
+      color: var(--yellow);
+      font-size: 11px;
+      font-weight: 950;
+      text-transform: uppercase;
+    }
+
+    .trial-card strong {
+      display: block;
+      margin-top: 8px;
+      font-size: 17px;
+      line-height: 1.3;
+      font-weight: 950;
+    }
+
+    .trial-card p {
+      margin: 9px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.55;
+      font-weight: 680;
+    }
+
+    .mini-terminal {
+      display: none;
+      position: absolute;
+      left: -10px;
+      bottom: 20px;
+      width: 298px;
+      padding: 13px;
+      border: 1px solid rgba(111, 255, 226, 0.26);
+      background: rgba(8, 14, 15, 0.86);
+      box-shadow: 0 0 46px rgba(0, 0, 0, 0.3);
+    }
+
+    .terminal-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 27px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 820;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .terminal-line:last-child {
+      border-bottom: 0;
+    }
+
+    .terminal-line strong {
+      color: var(--green);
+      font-size: 10px;
+      font-weight: 950;
+    }
+
+    @media (max-width: 1100px) {
+      body {
+        overflow: auto;
+      }
+
+      .page {
+        padding: 18px;
+      }
+
+      .nav {
+        display: none;
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .deck-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .panel,
+      .stage {
+        min-height: 520px;
+      }
+
+      .deck-wrap,
+      .deck {
+        min-height: auto;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .deck-head {
+        height: auto;
+        min-height: 92px;
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 10px;
+        padding: 14px;
+      }
+
+      .deck-title {
+        width: 100%;
+        font-size: 12px;
+        line-height: 1.3;
+      }
+
+      .deck-mode {
+        width: 100%;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+      }
+
+      .mode-pill {
+        height: 30px;
+        padding: 0 9px;
+        font-size: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="KOKUPIT AI ホーム">
+        <div class="mark">K</div>
+        <div>KOKUPIT AI</div>
+      </a>
+      <nav class="nav" aria-label="Main navigation">
+        <a href="loadout.html">AIロードアウト</a>
+        <a href="loadout.html#chips">スキルチップ</a>
+        <a href="loadout.html#build">ビルド</a>
+        <a href="./#deploy">セキュリティ</a>
+        <a href="./#deploy">料金</a>
+        <a class="cta" href="./#trial">オンラインで無料体験</a>
+      </nav>
+    </header>
+
+    <main class="hero">
+      <section class="copy" aria-label="Hero copy">
+        <div class="kicker"><span class="pulse"></span>AIサイバーデッキ ・ オンライン体験</div>
+        <h1><span class="headline-line">プロンプトではなく、</span><span class="headline-line highlight">AIロードアウトを組む。</span></h1>
+        <p class="lead">
+          スキルチップを自由に装備して、あなたの仕事に合わせたAIビルドを作成。
+          職種に縛られず、思考・知識・実行・表現・安全性をその場で組み替えられます。
+        </p>
+        <div class="actions">
+          <a class="primary" href="./#trial">オンラインでAIビルドを体験</a>
+          <a class="secondary" href="./">ホームに戻る</a>
+        </div>
+        <div class="loadout-summary">
+          <div class="summary-item">
+            <strong>無料ビルド</strong>
+            <span>サンプル資料と基本チップで、すぐに試せる。</span>
+          </div>
+          <div class="summary-item">
+            <strong>BYOK対応</strong>
+            <span>APIキーを接続して、自分のモデル枠でも実行。</span>
+          </div>
+          <div class="summary-item">
+            <strong>チップストア</strong>
+            <span>職種別ではなく、用途別にチップを追加。</span>
+          </div>
+          <div class="summary-item">
+            <strong>ローカル導入</strong>
+            <span>本格導入はローカル環境・専用環境へ。</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="deck-wrap" id="build" aria-label="AI loadout preview">
+        <div class="deck">
+          <div class="deck-head">
+            <div class="deck-title"><span class="status"></span>KOKUPIT AI ロードアウトエディタ</div>
+            <div class="deck-mode">
+              <span class="mode-pill active">オンライン体験</span>
+              <span class="mode-pill">自前API</span>
+              <span class="mode-pill">ローカル</span>
+            </div>
+          </div>
+
+          <div class="deck-grid">
+            <aside class="panel" id="chips">
+              <div class="panel-head">
+                <span>チップ倉庫</span>
+                <span>24</span>
+              </div>
+              <div class="chip-list">
+                <div class="chip active" tabindex="0" data-type="LOGIC" data-desc="契約・申請・財務データから、先にリスクや確認事項を検知する思考チップ。">
+                  <div class="chip-top">
+                    <span class="chip-type">思考</span>
+                    <span class="chip-name">リスク検知</span>
+                  </div>
+                  <div class="chip-rarity"><span class="active"></span><span class="active"></span><span class="active"></span></div>
+                </div>
+                <div class="chip" tabindex="0" data-type="DATA" data-desc="秘密保持、解除、損害賠償など、NDA確認に必要な観点を追加する知識チップ。">
+                  <div class="chip-top">
+                    <span class="chip-type">知識</span>
+                    <span class="chip-name">NDA知識</span>
+                  </div>
+                  <div class="chip-rarity"><span class="active"></span><span class="active"></span><span></span></div>
+                </div>
+                <div class="chip" tabindex="0" data-type="VOICE" data-desc="専門的な内容を、顧客に伝わる丁寧な説明文へ変換する表現チップ。">
+                  <div class="chip-top">
+                    <span class="chip-type">話法</span>
+                    <span class="chip-name">顧客トーン</span>
+                  </div>
+                  <div class="chip-rarity"><span class="active"></span><span class="active"></span><span></span></div>
+                </div>
+                <div class="chip" tabindex="0" data-type="ACTION" data-desc="請求書と台帳の差分を検出し、表形式で整理する実行チップ。">
+                  <div class="chip-top">
+                    <span class="chip-type">実行</span>
+                    <span class="chip-name">請求照合</span>
+                  </div>
+                  <div class="chip-rarity"><span class="active"></span><span></span><span></span></div>
+                </div>
+                <div class="chip" tabindex="0" data-type="GUARD" data-desc="個人情報やNDA資料を検知し、外部送信や断定表現を抑制する安全チップ。">
+                  <div class="chip-top">
+                    <span class="chip-type">防御</span>
+                    <span class="chip-name">個人情報防壁</span>
+                  </div>
+                  <div class="chip-rarity"><span class="active"></span><span class="active"></span><span class="active"></span></div>
+                </div>
+                <div class="chip" tabindex="0" data-type="FORMAT" data-desc="リスク表、修正文案、顧客説明文など、用途に合わせた出力形式へ整えるチップ。">
+                  <div class="chip-top">
+                    <span class="chip-type">形式</span>
+                    <span class="chip-name">リスク表</span>
+                  </div>
+                  <div class="chip-rarity"><span class="active"></span><span class="active"></span><span></span></div>
+                </div>
+                <div class="chip" tabindex="0" data-type="LOGIC" data-desc="結論、根拠、例外を分けて、専門業務向けに論点を整理する思考チップ。">
+                  <div class="chip-top">
+                    <span class="chip-type">思考</span>
+                    <span class="chip-name">論点整理</span>
+                  </div>
+                  <div class="chip-rarity"><span class="active"></span><span></span><span></span></div>
+                </div>
+                <div class="chip" tabindex="0" data-type="ACTION" data-desc="入力情報から申請書や報告書の下書きを作成する実行チップ。">
+                  <div class="chip-top">
+                    <span class="chip-type">実行</span>
+                    <span class="chip-name">下書き生成</span>
+                  </div>
+                  <div class="chip-rarity"><span class="active"></span><span class="active"></span><span></span></div>
+                </div>
+                <div class="chip locked" tabindex="0" data-type="DATA" data-desc="社内資料や過去案件を知識チップとして接続する高級チップ。プロプランで解放。">
+                  <span class="chip-lock">鍵</span>
+                  <div class="chip-top">
+                    <span class="chip-type">高級</span>
+                    <span class="chip-name">社内知識</span>
+                  </div>
+                  <div class="chip-rarity"><span class="active"></span><span class="active"></span><span class="active"></span></div>
+                </div>
+                <div class="chip locked" tabindex="0" data-type="ACTION" data-desc="定型業務を複数ステップで自動実行する高級チップ。プロプランで解放。">
+                  <span class="chip-lock">鍵</span>
+                  <div class="chip-top">
+                    <span class="chip-type">高級</span>
+                    <span class="chip-name">自動実行</span>
+                  </div>
+                  <div class="chip-rarity"><span class="active"></span><span class="active"></span><span class="active"></span></div>
+                </div>
+                <div class="chip locked" tabindex="0" data-type="GUARD" data-desc="操作ログと出力履歴を確認できる高級チップ。チーム利用やローカル導入で有効。">
+                  <span class="chip-lock">鍵</span>
+                  <div class="chip-top">
+                    <span class="chip-type">高級</span>
+                    <span class="chip-name">監査ログ</span>
+                  </div>
+                  <div class="chip-rarity"><span class="active"></span><span class="active"></span><span class="active"></span></div>
+                </div>
+                <div class="chip locked" tabindex="0" data-type="FORMAT" data-desc="提案書、表、顧客説明文など複数形式を同時生成する高級チップ。プロプランで解放。">
+                  <span class="chip-lock">鍵</span>
+                  <div class="chip-top">
+                    <span class="chip-type">高級</span>
+                    <span class="chip-name">複数出力</span>
+                  </div>
+                  <div class="chip-rarity"><span class="active"></span><span class="active"></span><span class="active"></span></div>
+                </div>
+              </div>
+            </aside>
+
+            <section class="stage">
+              <div class="build-bar">
+                <div>
+                  <div class="build-small">現在のAIビルド</div>
+                  <div class="build-name">ハイブリッド専門家</div>
+                </div>
+                <button class="build-save">保存</button>
+              </div>
+
+              <div class="equipment-field">
+                <div class="slot-line a"></div>
+                <div class="slot-line b"></div>
+                <div class="slot-line c"></div>
+                <div class="slot-line d"></div>
+
+                <div class="avatar-figure" aria-label="AI character model">
+                  <div class="avatar-head"></div>
+                  <div class="avatar-arm left"></div>
+                  <div class="avatar-arm right"></div>
+                  <div class="avatar-torso"></div>
+                  <div class="avatar-leg left"></div>
+                  <div class="avatar-leg right"></div>
+                  <div class="avatar-core">AI</div>
+                </div>
+
+                <div class="equip-slot logic">
+                  <div class="slot-label">思考スロット</div>
+                  <div class="slot-name">リスク検知</div>
+                  <div class="slot-bonus">適合 +32</div>
+                </div>
+                <div class="equip-slot lens">
+                  <div class="slot-label">視点スロット</div>
+                  <div class="slot-name">文書フォーカス</div>
+                  <div class="slot-bonus">正確 +18</div>
+                </div>
+                <div class="equip-slot knowledge">
+                  <div class="slot-label">知識スロット</div>
+                  <div class="slot-name">NDA知識</div>
+                  <div class="slot-bonus">法務 +28</div>
+                </div>
+                <div class="equip-slot action">
+                  <div class="slot-label">実行スロット</div>
+                  <div class="slot-name">下書き生成</div>
+                  <div class="slot-bonus">速度 +21</div>
+                </div>
+                <div class="equip-slot voice empty">
+                  <div class="slot-label">話法スロット</div>
+                  <div class="slot-name">空きスロット</div>
+                </div>
+                <div class="equip-slot guard empty">
+                  <div class="slot-label">防御スロット</div>
+                  <div class="slot-name">空きスロット</div>
+                </div>
+                <div class="equip-slot memory locked">
+                  <div class="slot-label">記憶スロット</div>
+                  <div class="slot-name">プロで解放</div>
+                </div>
+                <div class="equip-slot tool locked">
+                  <div class="slot-label">ツール接続</div>
+                  <div class="slot-name">プロで解放</div>
+                </div>
+                <div class="equip-slot pro-a locked">
+                  <div class="slot-label">自動実行</div>
+                  <div class="slot-name">有料スロット</div>
+                </div>
+                <div class="equip-slot pro-b locked">
+                  <div class="slot-label">監査ログ</div>
+                  <div class="slot-name">有料スロット</div>
+                </div>
+
+                <div class="avatar-caption">スロットにチップを装備して、AIの性能を組み替える。</div>
+              </div>
+            </section>
+
+            <aside class="panel">
+              <div class="panel-head">
+                <span>ビルド能力</span>
+                <span>反映中</span>
+              </div>
+              <div class="stats">
+                <div class="profile">
+                  <div class="profile-label">自由ビルド</div>
+                  <div class="profile-name">法務 × 顧客対応 × 事務処理</div>
+                </div>
+
+                <div class="hex-stats" aria-label="能力六角形">
+                  <svg class="radar" viewBox="0 0 240 240" role="img" aria-label="思考、知識、実行、表現、記憶、安全の能力値">
+                    <polygon class="radar-grid" points="120,30 197.9,75 197.9,165 120,210 42.1,165 42.1,75"></polygon>
+                    <polygon class="radar-grid" points="120,60 171.9,90 171.9,150 120,180 68.1,150 68.1,90"></polygon>
+                    <polygon class="radar-grid" points="120,90 146,105 146,135 120,150 94,135 94,105"></polygon>
+                    <line class="radar-axis" x1="120" y1="120" x2="120" y2="30"></line>
+                    <line class="radar-axis" x1="120" y1="120" x2="197.9" y2="75"></line>
+                    <line class="radar-axis" x1="120" y1="120" x2="197.9" y2="165"></line>
+                    <line class="radar-axis" x1="120" y1="120" x2="120" y2="210"></line>
+                    <line class="radar-axis" x1="120" y1="120" x2="42.1" y2="165"></line>
+                    <line class="radar-axis" x1="120" y1="120" x2="42.1" y2="75"></line>
+                    <polygon class="radar-shape" points="120,40.8 185.4,82.2 176.1,152.4 120,190.2 70.1,148.8 49.1,79.1"></polygon>
+                    <text class="radar-label" x="120" y="20" text-anchor="middle">思考</text>
+                    <text class="radar-value" x="120" y="34" text-anchor="middle">88</text>
+                    <text class="radar-label" x="216" y="72" text-anchor="middle">知識</text>
+                    <text class="radar-value" x="216" y="86" text-anchor="middle">84</text>
+                    <text class="radar-label" x="216" y="166" text-anchor="middle">実行</text>
+                    <text class="radar-value" x="216" y="180" text-anchor="middle">72</text>
+                    <text class="radar-label" x="120" y="230" text-anchor="middle">表現</text>
+                    <text class="radar-value" x="120" y="240" text-anchor="middle">78</text>
+                    <text class="radar-label" x="24" y="166" text-anchor="middle">記憶</text>
+                    <text class="radar-value" x="24" y="180" text-anchor="middle">64</text>
+                    <text class="radar-label" x="24" y="72" text-anchor="middle">安全</text>
+                    <text class="radar-value" x="24" y="86" text-anchor="middle">91</text>
+                  </svg>
+                  <div class="hex-legend">
+                    <div><span>思考</span><strong>88</strong></div>
+                    <div><span>知識</span><strong>84</strong></div>
+                    <div><span>実行</span><strong>72</strong></div>
+                    <div><span>表現</span><strong>78</strong></div>
+                    <div><span>記憶</span><strong>64</strong></div>
+                    <div><span>安全</span><strong>91</strong></div>
+                  </div>
+                </div>
+
+                <div class="mods">
+                  <div class="mods-title">装備中スロット</div>
+                  <div class="mod-grid">
+                    <div class="mod"><span>思考</span>リスク検知</div>
+                    <div class="mod"><span>視点</span>文書フォーカス</div>
+                    <div class="mod"><span>実行</span>下書き生成</div>
+                    <div class="mod"><span>知識</span>NDA知識</div>
+                    <div class="mod"><span>話法</span>空き</div>
+                    <div class="mod"><span>防御</span>空き</div>
+                  </div>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </div>
+
+        <div class="mini-terminal" aria-label="オンライン体験の状態">
+          <div class="terminal-line"><span>体験クレジット</span><strong>20</strong></div>
+          <div class="terminal-line"><span>サンプルビルド</span><strong>無料</strong></div>
+          <div class="terminal-line"><span>自前APIモード</span><strong>対応</strong></div>
+        </div>
+
+        <div class="trial-card">
+          <div class="label">ロードアウトを試す</div>
+          <strong>職種ではなく、用途でAIを組み替える。</strong>
+          <p>サンプル資料で試して、気に入ったチップ構成を保存。必要なら自分のAPIキーやローカル環境へ移行できます。</p>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script>
+    document.querySelectorAll(".chip[data-desc]").forEach((chip) => {
+      let pressTimer;
+
+      chip.addEventListener("pointerdown", (event) => {
+        if (event.pointerType !== "touch") return;
+        pressTimer = window.setTimeout(() => {
+          document.querySelectorAll(".chip.tooltip-open").forEach((openChip) => {
+            if (openChip !== chip) openChip.classList.remove("tooltip-open");
+          });
+          chip.classList.add("tooltip-open");
+          window.setTimeout(() => chip.classList.remove("tooltip-open"), 2200);
+        }, 420);
+      });
+
+      ["pointerup", "pointercancel", "pointerleave"].forEach((eventName) => {
+        chip.addEventListener(eventName, () => window.clearTimeout(pressTimer));
+      });
+    });
+  </script>
+</body>
+</html>
