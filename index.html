@@ -1,0 +1,1434 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>KOKUPIT AI Homepage Mockup</title>
+  <style>
+    :root {
+      --bg: #080d10;
+      --bg-2: #101716;
+      --panel: rgba(13, 22, 23, 0.84);
+      --panel-2: rgba(18, 29, 28, 0.72);
+      --line: rgba(139, 255, 222, 0.2);
+      --line-hot: rgba(255, 210, 72, 0.5);
+      --text: #effff8;
+      --muted: rgba(239, 255, 248, 0.62);
+      --dim: rgba(239, 255, 248, 0.38);
+      --cyan: #6fffe2;
+      --green: #4ee485;
+      --yellow: #ffd248;
+      --red: #ff5e4d;
+      --pink: #f268ff;
+      --blue: #5ba8ff;
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.42);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      background: var(--bg);
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 20% 16%, rgba(111, 255, 226, 0.16), transparent 26%),
+        radial-gradient(circle at 84% 12%, rgba(255, 210, 72, 0.13), transparent 25%),
+        radial-gradient(circle at 76% 76%, rgba(242, 104, 255, 0.12), transparent 24%),
+        linear-gradient(135deg, #070b0e 0%, #111613 46%, #090d11 100%);
+      font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", "Noto Sans JP", "Segoe UI", sans-serif;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.28;
+      background-image:
+        linear-gradient(rgba(111, 255, 226, 0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(111, 255, 226, 0.04) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: radial-gradient(circle at 62% 44%, black, transparent 78%);
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.16;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent 0,
+        transparent 7px,
+        rgba(255, 255, 255, 0.05) 8px
+      );
+      mix-blend-mode: screen;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      padding: 28px 40px 56px;
+    }
+
+    .topbar {
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 0 16px 0 18px;
+      border: 1px solid rgba(111, 255, 226, 0.18);
+      background: rgba(6, 13, 15, 0.74);
+      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.25), inset 0 0 0 1px rgba(255, 255, 255, 0.035);
+      backdrop-filter: blur(18px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 16px;
+      font-weight: 900;
+      letter-spacing: 0;
+    }
+
+    .mark {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(111, 255, 226, 0.44);
+      color: #061110;
+      background: linear-gradient(135deg, var(--cyan), var(--yellow));
+      box-shadow: 0 0 28px rgba(111, 255, 226, 0.22);
+      font-weight: 950;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .nav button,
+    .primary,
+    .secondary,
+    .mini-button {
+      font-family: inherit;
+      cursor: default;
+    }
+
+    .nav button {
+      height: 38px;
+      padding: 0 18px;
+      border: 1px solid rgba(255, 210, 72, 0.5);
+      color: #0d1009;
+      background: var(--yellow);
+      font-size: 13px;
+      font-weight: 900;
+      box-shadow: 0 0 30px rgba(255, 210, 72, 0.22);
+    }
+
+    .hero {
+      max-width: 1360px;
+      min-height: calc(100vh - 112px);
+      display: grid;
+      grid-template-columns: minmax(460px, 0.9fr) minmax(650px, 1.1fr);
+      gap: 42px;
+      align-items: center;
+      margin: 0 auto;
+      padding: 48px 0 28px;
+    }
+
+    .copy {
+      min-width: 0;
+    }
+
+    .kicker {
+      display: inline-flex;
+      width: fit-content;
+      align-items: center;
+      gap: 10px;
+      height: 34px;
+      padding: 0 12px;
+      border: 1px solid rgba(111, 255, 226, 0.26);
+      color: var(--cyan);
+      background: rgba(111, 255, 226, 0.07);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .pulse {
+      width: 9px;
+      height: 9px;
+      background: var(--green);
+      box-shadow: 0 0 0 5px rgba(78, 228, 133, 0.12), 0 0 18px rgba(78, 228, 133, 0.7);
+    }
+
+    h1 {
+      max-width: 720px;
+      margin: 24px 0 0;
+      color: var(--text);
+      font-size: clamp(38px, 4vw, 58px);
+      line-height: 1.02;
+      letter-spacing: 0;
+      font-weight: 950;
+    }
+
+    .line {
+      display: block;
+      white-space: nowrap;
+    }
+
+    .highlight {
+      color: var(--yellow);
+      text-shadow: 0 0 28px rgba(255, 210, 72, 0.18);
+      white-space: nowrap;
+    }
+
+    .lead {
+      max-width: 640px;
+      margin: 24px 0 0;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.85;
+      font-weight: 650;
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 34px;
+    }
+
+    .primary,
+    .secondary {
+      height: 52px;
+      padding: 0 20px;
+      font-size: 15px;
+      font-weight: 900;
+    }
+
+    .primary {
+      border: 1px solid rgba(255, 210, 72, 0.65);
+      color: #08100e;
+      background: var(--yellow);
+      box-shadow: 0 0 36px rgba(255, 210, 72, 0.22);
+    }
+
+    .secondary {
+      border: 1px solid rgba(111, 255, 226, 0.22);
+      color: var(--text);
+      background: rgba(111, 255, 226, 0.07);
+    }
+
+    .trust-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      max-width: 650px;
+      margin-top: 30px;
+    }
+
+    .trust-item {
+      min-height: 72px;
+      padding: 11px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .trust-item strong {
+      display: block;
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 950;
+    }
+
+    .trust-item span {
+      display: block;
+      margin-top: 7px;
+      color: var(--dim);
+      font-size: 11px;
+      line-height: 1.45;
+      font-weight: 760;
+    }
+
+    .visual {
+      position: relative;
+      min-height: 686px;
+      border: 1px solid rgba(111, 255, 226, 0.22);
+      background:
+        linear-gradient(135deg, rgba(9, 18, 20, 0.92), rgba(19, 26, 22, 0.86)),
+        radial-gradient(circle at 48% 38%, rgba(111, 255, 226, 0.13), transparent 32%);
+      box-shadow: var(--shadow), inset 0 0 0 1px rgba(255, 255, 255, 0.035);
+      overflow: hidden;
+    }
+
+    .visual::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: 0.5;
+      background:
+        linear-gradient(120deg, transparent 0 18%, rgba(111, 255, 226, 0.08) 18.4%, transparent 19% 61%, rgba(255, 210, 72, 0.08) 61.5%, transparent 62%),
+        linear-gradient(rgba(255, 255, 255, 0.032) 1px, transparent 1px);
+      background-size: auto, 100% 24px;
+      pointer-events: none;
+    }
+
+    .visual-head {
+      position: relative;
+      z-index: 2;
+      height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      border-bottom: 1px solid rgba(111, 255, 226, 0.16);
+      background: rgba(6, 12, 13, 0.58);
+    }
+
+    .visual-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 950;
+    }
+
+    .status {
+      width: 10px;
+      height: 10px;
+      background: var(--green);
+      box-shadow: 0 0 18px rgba(78, 228, 133, 0.8);
+    }
+
+    .mode-tabs {
+      display: flex;
+      gap: 8px;
+    }
+
+    .mode {
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 10px;
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      color: var(--dim);
+      background: rgba(255, 255, 255, 0.04);
+      font-size: 11px;
+      font-weight: 900;
+    }
+
+    .mode.active {
+      color: #08100e;
+      border-color: rgba(255, 210, 72, 0.6);
+      background: var(--yellow);
+    }
+
+    .trial-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: minmax(282px, 0.76fr) minmax(384px, 1.24fr);
+      gap: 12px;
+      padding: 12px;
+    }
+
+    .side-panel,
+    .build-preview {
+      min-height: 602px;
+      border: 1px solid rgba(111, 255, 226, 0.15);
+      background: rgba(7, 14, 15, 0.72);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.025);
+    }
+
+    .panel-head {
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+      border-bottom: 1px solid rgba(111, 255, 226, 0.13);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .path-list {
+      display: grid;
+      gap: 10px;
+      padding: 10px;
+    }
+
+    .path-item {
+      min-height: auto;
+      padding: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .path-item.active {
+      border-color: rgba(255, 210, 72, 0.48);
+      background: rgba(255, 210, 72, 0.08);
+    }
+
+    .step-row,
+    .result-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .step {
+      width: fit-content;
+      height: 20px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 7px;
+      border: 1px solid rgba(111, 255, 226, 0.22);
+      color: var(--cyan);
+      background: rgba(111, 255, 226, 0.06);
+      font-size: 9px;
+      font-weight: 950;
+    }
+
+    .step-tag {
+      color: var(--yellow);
+      font-size: 9px;
+      font-weight: 950;
+    }
+
+    .step-title {
+      display: block;
+      margin-top: 8px;
+      font-size: 15px;
+      font-weight: 950;
+    }
+
+    .choice-grid,
+    .autoload-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 7px;
+      margin-top: 10px;
+    }
+
+    .choice-card,
+    .autoload-card {
+      position: relative;
+      min-height: 54px;
+      padding: 8px;
+      border: 1px solid rgba(111, 255, 226, 0.14);
+      background: rgba(7, 14, 15, 0.74);
+    }
+
+    .choice-card.selected {
+      border-color: rgba(255, 210, 72, 0.54);
+      background: rgba(255, 210, 72, 0.08);
+    }
+
+    .choice-card.custom {
+      border-style: dashed;
+    }
+
+    .choice-card small {
+      position: absolute;
+      right: 7px;
+      top: 7px;
+      color: var(--yellow);
+      font-size: 7px;
+      font-weight: 950;
+    }
+
+    .choice-card.custom small {
+      color: var(--cyan);
+    }
+
+    .choice-card strong,
+    .autoload-card strong {
+      display: block;
+      max-width: none;
+      padding-right: 34px;
+      color: var(--text);
+      font-size: 10px;
+      line-height: 1.25;
+      font-weight: 950;
+    }
+
+    .choice-card span,
+    .flow-note,
+    .result-preview li {
+      display: block;
+      margin-top: 7px;
+      color: var(--dim);
+      font-size: 10px;
+      line-height: 1.45;
+      font-weight: 720;
+    }
+
+    .autoload-card {
+      min-height: 48px;
+      border-color: rgba(111, 255, 226, 0.22);
+    }
+
+    .autoload-card strong {
+      padding-right: 0;
+      color: var(--cyan);
+      font-size: 9px;
+    }
+
+    .autoload-card span {
+      display: block;
+      margin-top: 5px;
+      color: var(--text);
+      font-size: 11px;
+      line-height: 1.25;
+      font-weight: 950;
+    }
+
+    .result-preview {
+      margin-top: 10px;
+      padding: 10px;
+      border: 1px solid rgba(111, 255, 226, 0.17);
+      background: rgba(6, 12, 13, 0.68);
+    }
+
+    .result-title span {
+      color: var(--cyan);
+      font-size: 9px;
+      font-weight: 950;
+    }
+
+    .result-title em {
+      color: var(--yellow);
+      font-size: 9px;
+      font-style: normal;
+      font-weight: 950;
+    }
+
+    .result-preview strong {
+      display: block;
+      margin-top: 8px;
+      color: var(--text);
+      font-size: 13px;
+      line-height: 1.3;
+      font-weight: 950;
+    }
+
+    .result-preview ul {
+      display: grid;
+      gap: 5px;
+      margin: 8px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .result-preview li {
+      margin: 0;
+    }
+
+    .build-preview {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .build-bar {
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 12px;
+      padding: 0 14px;
+      border: 1px solid rgba(111, 255, 226, 0.15);
+      background: rgba(7, 14, 15, 0.7);
+    }
+
+    .build-small {
+      color: var(--dim);
+      font-size: 10px;
+      font-weight: 900;
+    }
+
+    .build-name {
+      margin-top: 4px;
+      color: var(--text);
+      font-size: 22px;
+      font-weight: 950;
+      line-height: 1.2;
+    }
+
+    .mini-button {
+      height: 32px;
+      padding: 0 11px;
+      border: 1px solid rgba(255, 210, 72, 0.52);
+      color: var(--yellow);
+      background: rgba(255, 210, 72, 0.08);
+      font-size: 11px;
+      font-weight: 900;
+    }
+
+    .build-stage {
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      top: 92px;
+      bottom: 12px;
+      border: 1px solid rgba(111, 255, 226, 0.12);
+      background: radial-gradient(circle at 50% 42%, rgba(111, 255, 226, 0.14), transparent 36%);
+    }
+
+    .avatar {
+      position: absolute;
+      left: 50%;
+      top: 43%;
+      width: 108px;
+      height: 282px;
+      transform: translate(-50%, -50%);
+      opacity: 0.58;
+      filter: drop-shadow(0 0 32px rgba(111, 255, 226, 0.18));
+    }
+
+    .avatar div {
+      position: absolute;
+      border: 1px solid rgba(111, 255, 226, 0.42);
+      background:
+        linear-gradient(135deg, rgba(111, 255, 226, 0.16), rgba(255, 210, 72, 0.08)),
+        rgba(8, 18, 19, 0.94);
+    }
+
+    .head {
+      left: 39px;
+      top: 4px;
+      width: 48px;
+      height: 54px;
+      clip-path: polygon(26% 0, 74% 0, 100% 28%, 88% 86%, 50% 100%, 12% 86%, 0 28%);
+    }
+
+    .body {
+      left: 24px;
+      top: 72px;
+      width: 78px;
+      height: 136px;
+      clip-path: polygon(16% 0, 84% 0, 100% 26%, 82% 100%, 18% 100%, 0 26%);
+    }
+
+    .arm {
+      top: 86px;
+      width: 30px;
+      height: 120px;
+      clip-path: polygon(36% 0, 100% 12%, 72% 100%, 0 88%);
+    }
+
+    .arm.left {
+      left: 0;
+      transform: rotate(7deg);
+    }
+
+    .arm.right {
+      right: 0;
+      transform: scaleX(-1) rotate(7deg);
+    }
+
+    .leg {
+      top: 198px;
+      width: 30px;
+      height: 82px;
+      clip-path: polygon(8% 0, 92% 0, 76% 100%, 20% 100%);
+    }
+
+    .leg.left {
+      left: 34px;
+    }
+
+    .leg.right {
+      right: 34px;
+    }
+
+    .equipped-card,
+    .empty-slot,
+    .locked-slot {
+      position: absolute;
+      width: 124px;
+      min-height: 58px;
+      padding: 8px;
+      border: 1px solid rgba(111, 255, 226, 0.28);
+      background: rgba(7, 14, 15, 0.84);
+      box-shadow: 0 0 24px rgba(0, 0, 0, 0.18);
+      z-index: 2;
+    }
+
+    .equipped-card strong,
+    .empty-slot strong,
+    .locked-slot strong {
+      display: block;
+      color: var(--cyan);
+      font-size: 9px;
+      font-weight: 950;
+    }
+
+    .equipped-card span,
+    .empty-slot span,
+    .locked-slot span {
+      display: block;
+      margin-top: 6px;
+      color: var(--text);
+      font-size: 12px;
+      line-height: 1.25;
+      font-weight: 900;
+    }
+
+    .equipped-card em {
+      display: block;
+      margin-top: 5px;
+      color: var(--yellow);
+      font-size: 9px;
+      font-style: normal;
+      font-weight: 900;
+    }
+
+    .empty-slot {
+      border-style: dashed;
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    .empty-slot span {
+      color: var(--dim);
+    }
+
+    .locked-slot {
+      border-color: rgba(255, 210, 72, 0.32);
+      background:
+        repeating-linear-gradient(135deg, rgba(255, 210, 72, 0.12) 0 6px, transparent 6px 14px),
+        rgba(7, 14, 15, 0.88);
+    }
+
+    .locked-slot::after {
+      content: "鍵";
+      position: absolute;
+      right: 7px;
+      top: 7px;
+      color: var(--yellow);
+      font-size: 11px;
+      font-weight: 950;
+    }
+
+    .card-a { left: 22px; top: 28px; }
+    .card-b { right: 22px; top: 28px; }
+    .card-c { left: 22px; top: 112px; }
+    .card-d { right: 22px; top: 112px; }
+    .card-e { left: 22px; top: 206px; }
+    .card-f { right: 22px; top: 206px; }
+
+    .output-console {
+      position: absolute;
+      left: 20px;
+      right: 20px;
+      bottom: 18px;
+      z-index: 3;
+      min-height: 150px;
+      border: 1px solid rgba(255, 210, 72, 0.38);
+      background:
+        linear-gradient(135deg, rgba(255, 210, 72, 0.1), rgba(111, 255, 226, 0.05)),
+        rgba(6, 12, 13, 0.92);
+      padding: 13px;
+      box-shadow: 0 0 34px rgba(255, 210, 72, 0.08);
+    }
+
+    .output-console-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      color: var(--cyan);
+      font-size: 9px;
+      font-weight: 950;
+    }
+
+    .output-console-head span:last-child {
+      color: var(--yellow);
+    }
+
+    .output-console strong {
+      display: block;
+      margin-top: 9px;
+      color: var(--text);
+      font-size: 17px;
+      line-height: 1.25;
+      font-weight: 950;
+    }
+
+    .output-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 7px;
+      margin-top: 11px;
+    }
+
+    .output-metric {
+      min-height: 48px;
+      padding: 8px;
+      border: 1px solid rgba(111, 255, 226, 0.14);
+      background: rgba(7, 14, 15, 0.68);
+    }
+
+    .output-metric em {
+      display: block;
+      color: var(--yellow);
+      font-size: 16px;
+      line-height: 1;
+      font-style: normal;
+      font-weight: 950;
+    }
+
+    .output-metric span {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 9px;
+      line-height: 1.35;
+      font-weight: 820;
+    }
+
+    .output-note {
+      margin-top: 10px;
+      color: var(--dim);
+      font-size: 10px;
+      line-height: 1.45;
+      font-weight: 760;
+    }
+
+    .section {
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 72px 0 0;
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: 0.8fr 1.2fr;
+      gap: 24px;
+      align-items: end;
+      margin-bottom: 22px;
+    }
+
+    .section h2 {
+      margin: 0;
+      color: var(--text);
+      font-size: clamp(30px, 3vw, 44px);
+      line-height: 1.16;
+      font-weight: 950;
+    }
+
+    .section-head p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.8;
+      font-weight: 650;
+    }
+
+    .use-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .use-card,
+    .compare-card,
+    .deploy-card {
+      border: 1px solid rgba(111, 255, 226, 0.16);
+      background: rgba(7, 14, 15, 0.72);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.025);
+    }
+
+    .use-card {
+      min-height: 154px;
+      padding: 14px;
+    }
+
+    .chip-label {
+      width: fit-content;
+      height: 20px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 7px;
+      border: 1px solid rgba(111, 255, 226, 0.22);
+      color: var(--cyan);
+      background: rgba(111, 255, 226, 0.06);
+      font-size: 9px;
+      font-weight: 950;
+    }
+
+    .use-card strong {
+      display: block;
+      margin-top: 13px;
+      color: var(--text);
+      font-size: 18px;
+      line-height: 1.25;
+      font-weight: 950;
+    }
+
+    .use-card p {
+      margin: 10px 0 0;
+      color: var(--dim);
+      font-size: 12px;
+      line-height: 1.65;
+      font-weight: 700;
+    }
+
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .compare-card {
+      min-height: 220px;
+      padding: 18px;
+    }
+
+    .compare-card h3,
+    .deploy-card h3 {
+      margin: 0;
+      color: var(--text);
+      font-size: 22px;
+      line-height: 1.25;
+      font-weight: 950;
+    }
+
+    .compare-card ul {
+      display: grid;
+      gap: 11px;
+      margin: 18px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .compare-card li {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+      font-weight: 760;
+    }
+
+    .compare-card li::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      display: inline-block;
+      margin-right: 8px;
+      background: var(--cyan);
+    }
+
+    .compare-card.weak li::before {
+      background: var(--red);
+    }
+
+    .deploy-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .deploy-card {
+      min-height: 190px;
+      padding: 18px;
+    }
+
+    .deploy-card p {
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+      font-weight: 700;
+    }
+
+    .deploy-card .price {
+      display: inline-flex;
+      align-items: center;
+      height: 28px;
+      margin-top: 18px;
+      padding: 0 10px;
+      color: #08100e;
+      background: var(--yellow);
+      font-size: 11px;
+      font-weight: 950;
+    }
+
+    .final-cta {
+      margin-top: 72px;
+      padding: 34px;
+      border: 1px solid rgba(255, 210, 72, 0.32);
+      background:
+        linear-gradient(135deg, rgba(255, 210, 72, 0.1), rgba(111, 255, 226, 0.05)),
+        rgba(7, 14, 15, 0.72);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .final-cta strong {
+      display: block;
+      color: var(--text);
+      font-size: clamp(26px, 2.8vw, 40px);
+      line-height: 1.2;
+      font-weight: 950;
+    }
+
+    .final-cta span {
+      display: block;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.65;
+      font-weight: 700;
+    }
+
+    @media (max-width: 1100px) {
+      .page {
+        padding: 18px;
+      }
+
+      .nav {
+        display: none;
+      }
+
+      .hero,
+      .section-head,
+      .compare-grid,
+      .deploy-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        min-height: auto;
+        padding-top: 46px;
+      }
+
+      h1 {
+        font-size: clamp(34px, 8.8vw, 52px);
+      }
+
+      .trust-row,
+      .use-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .trial-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .visual,
+      .side-panel,
+      .build-preview {
+        min-height: auto;
+      }
+
+      .build-preview {
+        min-height: 560px;
+      }
+
+      .final-cta {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .topbar {
+        height: 64px;
+      }
+
+      h1 {
+        font-size: clamp(30px, 8.75vw, 36px);
+      }
+
+      .brand {
+        font-size: 15px;
+      }
+
+      .actions,
+      .final-cta {
+        width: 100%;
+      }
+
+      .primary,
+      .secondary,
+      .final-cta .primary {
+        flex: 1;
+        padding: 0 12px;
+      }
+
+      .trust-row,
+      .use-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .mode-tabs {
+        display: none;
+      }
+
+      .visual-head {
+        height: 54px;
+      }
+
+      .trial-grid {
+        padding: 10px;
+      }
+
+      .equipped-card,
+      .empty-slot,
+      .locked-slot {
+        width: 104px;
+      }
+
+      .card-a,
+      .card-c {
+        left: 10px;
+      }
+
+      .card-b,
+      .card-d {
+        right: 10px;
+      }
+
+      .card-e,
+      .card-f {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <div class="brand">
+        <div class="mark">K</div>
+        <div>KOKUPIT AI</div>
+      </div>
+      <nav class="nav" aria-label="Main navigation">
+        <span>AIロードアウト</span>
+        <span>オンライン体験</span>
+        <span>用途</span>
+        <span>セキュリティ</span>
+        <span>料金</span>
+        <button>オンラインで無料体験</button>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="copy">
+          <div class="kicker"><span class="pulse"></span>3ステップで試せるAIロードアウト</div>
+          <h1>
+            <span class="line">選ぶだけで、</span>
+            <span class="line highlight">AIビルドを装備。</span>
+          </h1>
+          <p class="lead">
+            用途を選ぶと、必要なスキルチップを自動装備。
+            AIは確認・整理・下書きまで。最後の判断は人が行います。
+          </p>
+          <div class="actions">
+            <button class="primary">オンラインでAIビルドを体験</button>
+            <button class="secondary">ロードアウトを見る</button>
+          </div>
+          <div class="trust-row">
+            <div class="trust-item">
+              <strong>選ぶだけ</strong>
+              <span>用途からAIビルドを開始。</span>
+            </div>
+            <div class="trust-item">
+              <strong>自動装備</strong>
+              <span>必要なチップをセット。</span>
+            </div>
+            <div class="trust-item">
+              <strong>人が確認</strong>
+              <span>AIは下準備まで。</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="visual" aria-label="KOKUPIT AI online trial preview">
+          <div class="visual-head">
+            <div class="visual-title"><span class="status"></span>KOKUPIT AI オンライン体験</div>
+            <div class="mode-tabs">
+              <span class="mode active">体験</span>
+              <span class="mode">自前API</span>
+              <span class="mode">ローカル</span>
+            </div>
+          </div>
+          <div class="trial-grid">
+            <aside class="side-panel">
+              <div class="panel-head">
+                <span>体験フロー</span>
+                <span>3 STEP</span>
+              </div>
+              <div class="path-list">
+                <div class="path-item active">
+                  <div class="step-row">
+                    <div class="step">STEP 01</div>
+                    <span class="step-tag">4択</span>
+                  </div>
+                  <strong class="step-title">用途を選ぶ</strong>
+                  <div class="choice-grid">
+                    <div class="choice-card selected">
+                      <small>AUTO x4</small>
+                      <strong>文書処理</strong>
+                      <span>契約・申請</span>
+                    </div>
+                    <div class="choice-card">
+                      <small>AUTO x4</small>
+                      <strong>画像デザイン</strong>
+                      <span>案出し・修正</span>
+                    </div>
+                    <div class="choice-card">
+                      <small>AUTO x4</small>
+                      <strong>財務ワーク</strong>
+                      <span>請求・差分</span>
+                    </div>
+                    <div class="choice-card custom">
+                      <small>EMPTY</small>
+                      <strong>個別カスタム</strong>
+                      <span>空スロット</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="path-item">
+                  <div class="step-row">
+                    <div class="step">STEP 02</div>
+                    <span class="step-tag">自動装備</span>
+                  </div>
+                  <strong class="step-title">チップを自動装備</strong>
+                  <div class="autoload-grid">
+                    <div class="autoload-card">
+                      <strong>思考</strong>
+                      <span>リスク検知</span>
+                    </div>
+                    <div class="autoload-card">
+                      <strong>知識</strong>
+                      <span>NDA知識</span>
+                    </div>
+                    <div class="autoload-card">
+                      <strong>実行</strong>
+                      <span>下書き生成</span>
+                    </div>
+                    <div class="autoload-card">
+                      <strong>表現</strong>
+                      <span>丁寧な説明</span>
+                    </div>
+                  </div>
+                  <span class="flow-note">必要な構成を先にセット。後から調整できます。</span>
+                </div>
+                <div class="path-item">
+                  <div class="step-row">
+                    <div class="step">STEP 03</div>
+                    <span class="step-tag">結果プレビュー</span>
+                  </div>
+                  <strong class="step-title">下準備を確認</strong>
+                  <div class="result-preview">
+                    <div class="result-title">
+                      <span>文書処理ビルド</span>
+                      <em>出力例</em>
+                    </div>
+                    <strong>下準備完了</strong>
+                    <ul>
+                      <li>リスク候補を抽出</li>
+                      <li>修正文案を作成</li>
+                      <li>人による最終確認待ち</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </aside>
+
+            <section class="build-preview">
+              <div class="build-bar">
+                <div>
+                  <div class="build-small">生成されたAIビルド</div>
+                  <div class="build-name">文書処理ビルド</div>
+                </div>
+                <button class="mini-button">保存</button>
+              </div>
+              <div class="build-stage">
+                <div class="avatar">
+                  <div class="head"></div>
+                  <div class="arm left"></div>
+                  <div class="arm right"></div>
+                  <div class="body"></div>
+                  <div class="leg left"></div>
+                  <div class="leg right"></div>
+                </div>
+                <div class="equipped-card card-a">
+                  <strong>思考</strong>
+                  <span>リスク検知</span>
+                  <em>安全 +32</em>
+                </div>
+                <div class="equipped-card card-b">
+                  <strong>知識</strong>
+                  <span>NDA知識</span>
+                  <em>知識 +28</em>
+                </div>
+                <div class="equipped-card card-c">
+                  <strong>実行</strong>
+                  <span>下書き生成</span>
+                  <em>実行 +21</em>
+                </div>
+                <div class="equipped-card card-d">
+                  <strong>表現</strong>
+                  <span>丁寧な説明</span>
+                  <em>表現 +18</em>
+                </div>
+                <div class="locked-slot card-e">
+                  <strong>記憶</strong>
+                  <span>プロで解放</span>
+                </div>
+                <div class="locked-slot card-f">
+                  <strong>ツール</strong>
+                  <span>プロで解放</span>
+                </div>
+                <div class="output-console">
+                  <div class="output-console-head">
+                    <span>OUTPUT PREVIEW</span>
+                    <span>文書処理ビルド</span>
+                  </div>
+                  <strong>面倒な下準備を完了</strong>
+                  <div class="output-grid">
+                    <div class="output-metric">
+                      <em>3</em>
+                      <span>リスク候補</span>
+                    </div>
+                    <div class="output-metric">
+                      <em>2</em>
+                      <span>修正文案</span>
+                    </div>
+                    <div class="output-metric">
+                      <em>待</em>
+                      <span>人が最終確認</span>
+                    </div>
+                  </div>
+                  <div class="output-note">AIは下準備まで。判断・責任・顧客対応は人が持ちます。</div>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>AIに任せるのは、<br>面倒な下準備。</h2>
+          <p>
+            KOKUPIT AIは人を置き換える道具ではありません。
+            確認、整理、下書き、表づくりを軽くする仕事用ロードアウトです。
+          </p>
+        </div>
+        <div class="compare-grid">
+          <article class="compare-card">
+            <h3>AIビルドがやること</h3>
+            <ul>
+              <li>資料を読む</li>
+              <li>抜け漏れ候補を出す</li>
+              <li>下書きと表を作る</li>
+              <li>確認待ちにする</li>
+            </ul>
+          </article>
+          <article class="compare-card">
+            <h3>人がやること</h3>
+            <ul>
+              <li>判断する</li>
+              <li>顧客に説明する</li>
+              <li>品質を決める</li>
+              <li>責任を持って提出する</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>用途を選んで、<br>すぐ装備。</h2>
+          <p>
+            まずは4つの入口から開始。細かい調整は、必要になってからで十分です。
+          </p>
+        </div>
+        <div class="use-grid">
+          <article class="use-card">
+            <div class="chip-label">文書処理</div>
+            <strong>契約・申請・報告書</strong>
+            <p>読む、抜き出す、下書きする。</p>
+          </article>
+          <article class="use-card">
+            <div class="chip-label">画像デザイン</div>
+            <strong>構図案・スタイル整理</strong>
+            <p>方向性を整理し、修正指示を作る。</p>
+          </article>
+          <article class="use-card">
+            <div class="chip-label">財務ワーク</div>
+            <strong>請求・台帳・差分確認</strong>
+            <p>数字、期日、差分を見える化。</p>
+          </article>
+          <article class="use-card">
+            <div class="chip-label">個別カスタム</div>
+            <strong>空スロットから構築</strong>
+            <p>自分の仕事に合わせて装備。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>まず試す。<br>必要なら育てる。</h2>
+          <p>
+            オンライン体験から始めて、継続利用や機密業務では環境を切り替えられます。
+          </p>
+        </div>
+        <div class="deploy-grid">
+          <article class="deploy-card">
+            <h3>オンライン体験</h3>
+            <p>サンプル資料で、選ぶだけの体験から始める。</p>
+            <span class="price">無料体験</span>
+          </article>
+          <article class="deploy-card">
+            <h3>自前API</h3>
+            <p>使い慣れたAPIキーで、ビルドを継続利用。</p>
+            <span class="price">Pro / BYOK</span>
+          </article>
+          <article class="deploy-card">
+            <h3>ローカル導入</h3>
+            <p>機密資料は、専用環境やローカル環境へ。</p>
+            <span class="price">導入相談</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="final-cta">
+        <div>
+          <strong>あなた専用のAIビルドを、まずはオンラインで。</strong>
+          <span>用途を選び、チップを装備し、出力の違いをその場で試せます。</span>
+        </div>
+        <button class="primary">オンラインで無料体験</button>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
